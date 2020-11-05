@@ -12,81 +12,53 @@
 
 <body>
     <div class="d-flex flex-column align-items-center">
-        <h3>Golf Scorecard App</h3>
+        <h2>Golf Scorecard</h2>
     </div>
     <div class="container-fluid main-container d-flex flex-column align-items-center">
-        <div class="zip-container">
-            Please enter your zip code
-            <div>
-                <input id="zip-entry" type="number" placeholder="6 digit zip code">
-            </div>
-        </div>
-        <div class="course-selection">
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Please select your course:
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#">JS adds in course here</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-            </div>
-        </div>
-        <div class="experience-level">
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Please select experience level:
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a id="professional" class="dropdown-item" href="#">Professional</a>
-                    <a id="moderate" class="dropdown-item" href="#">Moderate</a>
-                    <a id="amateur" class="dropdown-item" href="#">Amateur</a>
-                </div>
-            </div>
-        </div>
-        <div class="hole-total-selection">
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Please select number of holes:
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a id="full-18" class="dropdown-item" href="#">Full 18</a>
-                    <a id="front-9" class="dropdown-item" href="#">Front 9</a>
-                    <a id="back-9" class="dropdown-item" href="#">Back 9</a>
-                </div>
-            </div>
-        </div>
-        <div id="player-container">
-            <div>
-                <div id="player-dropdown" class="dropdown d-flex flex-column align-items-center">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Please select number of players:
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a id="single-player" class="dropdown-item" href="#">1 player</a>
-                        <a id="two-players" class="dropdown-item" href="#">2 players</a>
-                        <a id="three-players" class="dropdown-item" href="#">3 players</a>
-                        <a id="four-players" class="dropdown-item" href="#">4 players</a>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <select class="dropdown" name="players" id="player-menu">
-                    <option value="default">Select the number of players:</option>
-                    <option value="singlePlayer">1 Player</option>
-                    <option value="twoPlayers">2 Players</option>
-                    <option value="threePlayers">3 Players</option>
-                    <option value="fourPlayers">4 Players</option>
-                </select>
-            </div>
 
-            <div id="player-entry">
-            </div>
+        <div class="form-group">
+            <select class="form-control" id="experience-level">
+                <option value="default">Please select your course:</option>
+                <option value="1">Fox Hollow</option>
+                <option value="2">Thanksgiving Point</option>
+                <option value="3">Spanish Oaks</option>
+            </select>
         </div>
+
+        <div class="form-group">
+            <select class="form-control" id="experience-level">
+                <option value="default">Please select tee type:</option>
+                <option value="1">Amateur Tee</option>
+                <option value="2">Women's Tee</option>
+                <option value="3">Men's Tee</option>
+                <option value="4">Professional</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <select class="form-control" id="hole-total-selection">
+                <option value="default">Please select number of holes:</option>
+                <option value="1">Full 18</option>
+                <option value="2">Front 9</option>
+                <option value="3">Back 9</option>
+            </select>
+        </div>
+
+        <div id="player-container" class="form-group">
+            <select class="form-control" id="player-count">
+                <option value="default">Please select number of players:</option>
+                <option value="1">1 Player</option>
+                <option value="2">2 Players</option>
+                <option value="3">3 Players</option>
+                <option value="4">4 Players</option>
+            </select>
+        </div>
+    </div>
+    <div id="player-entry">
+    </div>
+    <div class="d-flex flex-column align-items-center">
+        <button class="btn btn-success">Submit</button>
+    </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
