@@ -7,13 +7,14 @@ const holeTotal = document.getElementById('hole-total-selection');
 const allForms = document.getElementsByClassName('form-control');
 const submitButton = document.getElementById('submit');
 const scorecardDiv = document.getElementById('scorecard');
+// const names = document.getElementsByClassName('names');
 
-
-console.log(allForms);
 
 function optionsLogger() {
     golfCourseSelector.addEventListener('change', event => {
         const courseSelected = golfCourseSelector.value;
+        // const courseId = courseList.id;
+        // console.log(courseId);
         console.log(`selected ${courseSelected}`)
     })
     teeTypeSelector.addEventListener('change', event => {
@@ -34,22 +35,34 @@ optionsLogger()
 
 function allFieldsEntered() {
     submitButton.addEventListener('click', event => {
-        for(let i = 0; i < allForms.length; i++) {
-                if(allForms[i][0].selected) {
-                    allForms[i].classList.add('is-invalid');
-                    console.log('in if statement')
-                    console.log(allForms[i][0]);
-                } else {
-                    console.log('go to new page function here')
-                    allForms[i].classList.remove('is-invalid');
-                }
+        for (let i = 0; i < allForms.length; i++) {
+            if (allForms[i][0].selected) {
+                allForms[i].classList.add('is-invalid');
+            } else {
+                allForms[i].classList.remove('is-invalid');
+            }
         };
-        //separate for loop to validate entries
     })
 }
 allFieldsEntered();
 
-var xhttp = new XMLHttpRequest();
+
+function validateNames() {
+    console.log(names);
+    let namesArray = []
+    for(let i = 0; i < names.length; i++) {
+        console.log(names[i].value);
+        if(names[i].value == names[i+1].value) {
+            names[i].classList.add('is-invalid');
+        } else {
+            names[i].classList.remove('is-invalid');
+        }
+    }
+    console.log(names.length);
+}
+
+
+const xhttp = new XMLHttpRequest();
 xhttp.onreadystatechange = function () {
     if (xhttp.readyState == 4 && xhttp.status == 200) {
         console.log(xhttp.responseText);
@@ -59,6 +72,7 @@ xhttp.onreadystatechange = function () {
 };
 xhttp.open("GET", "https://golf-courses-api.herokuapp.com/courses", true);
 xhttp.send();
+
 
 
 playerDropdown.addEventListener('change', event => {
@@ -82,8 +96,23 @@ playerDropdown.addEventListener('change', event => {
     if (totalPlayers == 4) {
         playerEntryContainer.innerHTML = (header + createPlayerEntry() + createPlayerEntry() + createPlayerEntry() + createPlayerEntry());
     }
+    namesValidation();
 });
 
+function namesValidation() {
+    const names = document.getElementsByClassName('names');
+    for(let i = 0; i < names.length; i++) {
+        console.log(names[i].value)
+        names[i].addEventListener('onblur', event => {
+            console.log('working');
+        })
+        // if(names[i].value == names[i+1].value) {
+        //     names[i].classList.add('is-invalid');
+        // } else {
+        //     names[i].classList.remove('is-invalid');
+        // }
+    }
+};
 
 
 function createPlayerEntry() {
@@ -91,21 +120,25 @@ function createPlayerEntry() {
     <div class='container d-flex justify-content-center'>
         <div class='row'>
             <p class='col-3'> Player: <p>
-            <input class='col-md' type="text" placeholder="Name">
+            <input class='col-md names' type="text" placeholder="Name">
         </div>
     </div> `
     return playerTemplate
 }
 
+
+
+//submit function
+//make API call for ID of course
+//save players names that were entered and other selections
+
+
+
 //TO DO:
 //Need to add function that uses the data in dataLogger to populate 
 //scorecard with names, tee type, course info, etc
 //Also need a function that verifies that all data has been entered:
-//All options selected, names entered, no duplicate names
+//All options selected(done), names entered, no duplicate names
 //If duplicate name, module stating names cannot be the same. 
 //Templates for front 9 and back 9
 //For full 18, have it just populate one below the other. 
-//In template, could probably just use the 1-9 div as its own 
-//template and then insert the name of the line separate? 
-
-
