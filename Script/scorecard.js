@@ -1,38 +1,42 @@
 const test = document.getElementById('testDiv');
 
 function front9Template() {
-    let rowDiv = `
-    <div class="row">
+    let tableRow = `
+    <tr>
     `
-    let numberedDiv = `
-    <div class="col border"> 1 </div>
-    <div class="col border"> 2 </div>
-    <div class="col border"> 3 </div>
-    <div class="col border"> 4 </div>
-    <div class="col border"> 5 </div>
-    <div class="col border"> 6 </div>
-    <div class="col border"> 7 </div>
-    <div class="col border"> 8 </div>
-    <div class="col border"> 9 </div>
-    </div>
+
+    let tableData = `
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    </tr>
     `
     let fullTemplate = `
-    ${rowDiv}
-    <div class="col border"> Hole </div>
-    ${numberedDiv}
-    ${rowDiv}
-    <div class="col border"> Tee </div>
-    ${numberedDiv}
-    ${rowDiv}
-    <div class="col border"> Handicap </div>
-    ${numberedDiv}
-    ${rowDiv}
-    <div class="col border"> Names </div>
-    ${numberedDiv}
+    <table class="table table-striped table-bordered table-responsive">
+    <tbody>
+    ${tableRow}
+    <th scope="row">Hole</th>
+    ${tableData}
+    ${tableRow}
+    <th scope="row">Tee</th>
+    ${tableData}
+    ${tableRow}
+    <th scope="row">Handicap</th>
+    ${tableData}
+    ${tableRow}
+    <th scope="row">Names</th>
+    ${tableData}
+    </tbody>
+    </table>
     `
     return fullTemplate;
 }
-
 
 test.addEventListener('click', event => {
     test.innerHTML = front9Template();
