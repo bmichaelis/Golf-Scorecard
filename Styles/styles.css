@@ -4,4 +4,10 @@ input {
   border: none;
 }
 
+.table-container {
+  display: relative;
+  overflow-x: scroll;
+  max-width: 100%;
+}
+
 /*# sourceMappingURL=styles.css.map */

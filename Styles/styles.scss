@@ -3,3 +3,8 @@ input {
     width: 20px;
     border: none;
 }
+.table-container {
+    display: relative;
+    overflow-x: scroll;
+    max-width: 100%;
+}
