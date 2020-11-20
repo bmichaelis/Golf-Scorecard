@@ -21,7 +21,6 @@ $('#holesDropdown').change(function (event) {
     scorecardData()
 })
 $('#submitOptions').click(function (event) {
-    console.log('clicked submit options');
     validateOptions();
     scorecardData();
     populateScoreCard();
@@ -63,7 +62,6 @@ function createPlayerEntry() {
         console.log(names[i])
     }
     $('.names').blur(function (event) {
-        console.log('keys pressed')
         getNameData();
     })
 }
@@ -91,19 +89,16 @@ async function scorecardData() {
         holesToPlay = holesToPlay.splice(0, 9);
     }
     if (optionsSelected.courseOption == "19002") {
-        proPar.classList.add('d-none')
-        console.log('Professional Tee is not available in this course')
     } else {
         proPar.classList.remove('d-none')
     }
     for (let i = 0; i < holesToPlay.length; i++) {
         const hole = {};
         hole.number = courseData.data.holes[i].hole;
-        console.log(hole.number[i])
         if (optionsSelected.teeOption == "pro") {
             hole.par = courseData.data.holes[i].teeBoxes[0].par;
             hole.yards = courseData.data.holes[i].teeBoxes[0].yards;
-            hole.phcp = courseData.data.holes[i].teeBoxes[0].hcp;
+            hole.hcp = courseData.data.holes[i].teeBoxes[0].hcp;
         } else if (optionsSelected.teeOption == "champ") {
             hole.par = courseData.data.holes[i].teeBoxes[1].par;
             hole.yards = courseData.data.holes[i].teeBoxes[1].yards;
@@ -116,12 +111,45 @@ async function scorecardData() {
             hole.par = courseData.data.holes[i].teeBoxes[3].par;
             hole.yards = courseData.data.holes[i].teeBoxes[3].yards;
             hole.hcp = courseData.data.holes[i].teeBoxes[3].hcp;
+
         }
         course.push(hole);
     }
-    console.log(course)
+    course.parTotal = 0;
+    course.hcpTotal = 0;
+    course.yardsTotal = 0;
+    for (let i = 0; i < course.length; i++) {
+        course.parTotal += course[i].par;
+        course.hcpTotal += course[i].hcp;
+        course.yardsTotal += course[i].yards;
+
+    }
     return course;
 }
+
+async function calculateScore() {
+    const processedData = await scorecardData();
+    //have a for loop for each player, grab length of holes, 
+    //loop through those id on the inputs and add them for that player. 
+    //then, add player score to player score total.
+    let player1 = optionsSelected.playerNames[0];
+    let player2 = optionsSelected.playerNames[1];
+    let player3 = optionsSelected.playerNames[2];
+    let player4 = optionsSelected.playerNames[3];
+    let playerScores = [];
+    let score1 = 0;
+    if(optionsSelected.numberOfPlayers == 1) {
+        for(let i = 0; i < processedData.length; i++) {
+            score1 += document.getElementById(`${player1}${i}`.value)
+            console.log(document.getElementById(`${player1}${i}`.value))
+            console.log(score1)
+        }
+    }
+    console.log(score1)
+
+}
+
+window.calculateScore = calculateScore;
 
 async function populateScoreCard() {
     const processedData = await scorecardData();
@@ -148,15 +176,15 @@ async function populateScoreCard() {
         `
         for (let i = 0; i < processedData.length; i++) {
             nameRow += `
-            <td><input type="number"></input></td>
+            <td><input id="${optionsSelected.playerNames}${i}" onkeyup="calculateScore()" type="number"></td>
             `
         }
         nameRow += `
+        <td id="scoreTotal${i}"></td>
         </tr>
         `
         namesArray.push(nameRow);
     }
-
 
     for (let i = 0; i < processedData.length; i++) {
         holesRow += `
@@ -171,10 +199,13 @@ async function populateScoreCard() {
     }
     scorecardDiv.innerHTML = `
     ${holesRow}
+    <td>Total</td>
     </tr>
     ${yardsRow}
+    <td>${processedData.yardsTotal}</td>
     </tr>
     ${parRow}
+    <td>${processedData.parTotal}</td>
     </tr>
     ${namesArray.join('')}
     </tbody>
