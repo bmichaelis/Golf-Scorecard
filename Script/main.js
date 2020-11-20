@@ -1,36 +1,37 @@
 import { optionsSelected } from "./state.js"
-import { courseData } from "./apiCalls.js"
+import { getCourseData } from "./apiCall.js"
 
 $('#courseDropdown').change(function (event) {
     optionsSelected.courseOption = event.target.value;
     console.log(optionsSelected.courseOption)
     console.log(optionsSelected);
-    createScorecard();
+    scorecardData()
 })
 
 $('#teeTypeDropDown').change(function (event) {
     optionsSelected.teeOption = event.target.value;
     console.log(optionsSelected.teeOption)
     console.log(optionsSelected)
+    scorecardData()
 })
-// $('.names').change(function (event) {
-//     const namesClass = document.getElementsByClassName('names');
-//     console.log(namesClass[0].value)
-// })
 $('#holesDropdown').change(function (event) {
     optionsSelected.numberOfHoles = event.target.value;
     console.log(optionsSelected.numberOfHoles)
     console.log(optionsSelected)
+    scorecardData()
 })
 $('#submitOptions').click(function (event) {
     console.log('clicked submit options');
-    // $('#submitOptions').remove();
-    // createPlayersDropDown();
     validateOptions();
+    scorecardData();
+    populateScoreCard();
 })
 
 $('#playerDropdown').change(function (event) {
-    console.log('changed dropdown');
+    createPlayerEntry();
+})
+
+function createPlayerEntry() {
     const playerOption = event.target.value;
     optionsSelected.numberOfPlayers = event.target.value;
     const playerEntry = document.getElementById('player-name-entry')
@@ -58,24 +59,127 @@ $('#playerDropdown').change(function (event) {
     }
     const names = document.getElementsByClassName('names');
     for (let i = 0; i < names.length; i++) {
-        names[i].id = i;
+        names[i].id = `names${i}`;
         console.log(names[i])
     }
-})
-
-$('#submitPlayerNumber').click(function (event) {
-    console.log('clicked submit player number');
-})
-
-function createScorecard() {
-    let scorecardDiv = document.getElementById('scorecard')
-    console.log(optionsSelected.courseOption);
-    courseData(optionsSelected.courseOption);
-    for (let i = 0; i <= hole; i++) {
-        console.log(hole[i])
-    }
+    $('.names').blur(function (event) {
+        console.log('keys pressed')
+        getNameData();
+    })
 }
 
+function getNameData() {
+    const namesClass = document.getElementsByClassName('names');
+    console.log(namesClass);
+    let playerNames = [];
+    for (let i = 0; i < namesClass.length; i++) {
+        playerNames.push(namesClass[i].value);
+    }
+    console.log(playerNames)
+    optionsSelected.playerNames = playerNames;
+    console.log(optionsSelected)
+}
+
+async function scorecardData() {
+    const courseData = await getCourseData(optionsSelected.courseOption);
+    const proPar = document.getElementById("professional");
+    const course = [];
+    let holesToPlay = courseData.data.holes;
+    if (optionsSelected.numberOfHoles == 'front9') {
+        holesToPlay = holesToPlay.splice(9);
+    } else if (optionsSelected.numberOfHoles == 'back9') {
+        holesToPlay = holesToPlay.splice(0, 9);
+    }
+    if (optionsSelected.courseOption == "19002") {
+        proPar.classList.add('d-none')
+        console.log('Professional Tee is not available in this course')
+    } else {
+        proPar.classList.remove('d-none')
+    }
+    for (let i = 0; i < holesToPlay.length; i++) {
+        const hole = {};
+        hole.number = courseData.data.holes[i].hole;
+        console.log(hole.number[i])
+        if (optionsSelected.teeOption == "pro") {
+            hole.par = courseData.data.holes[i].teeBoxes[0].par;
+            hole.yards = courseData.data.holes[i].teeBoxes[0].yards;
+            hole.phcp = courseData.data.holes[i].teeBoxes[0].hcp;
+        } else if (optionsSelected.teeOption == "champ") {
+            hole.par = courseData.data.holes[i].teeBoxes[1].par;
+            hole.yards = courseData.data.holes[i].teeBoxes[1].yards;
+            hole.hcp = courseData.data.holes[i].teeBoxes[1].hcp;
+        } else if (optionsSelected.teeOption == "men") {
+            hole.par = courseData.data.holes[i].teeBoxes[2].par;
+            hole.yards = courseData.data.holes[i].teeBoxes[2].yards;
+            hole.hcp = courseData.data.holes[i].teeBoxes[2].hcp;
+        } else if (optionsSelected.teeOption == "women") {
+            hole.par = courseData.data.holes[i].teeBoxes[3].par;
+            hole.yards = courseData.data.holes[i].teeBoxes[3].yards;
+            hole.hcp = courseData.data.holes[i].teeBoxes[3].hcp;
+        }
+        course.push(hole);
+    }
+    console.log(course)
+    return course;
+}
+
+async function populateScoreCard() {
+    const processedData = await scorecardData();
+    let scorecardDiv = document.getElementById('scorecard');
+    let holesRow = `
+    <tbody id='debug'>
+    <tr>
+    <th>Holes</th>
+    `
+    let yardsRow = `
+    <tr>
+    <th>Yards</th>
+    `
+    let parRow = `
+    <tr>
+    <th>Par</th>
+    `
+
+    let namesArray = [];
+    for (let i = 0; i < optionsSelected.playerNames.length; i++) {
+        let nameRow = `
+        <tr>
+        <th>${optionsSelected.playerNames[i]}</th>
+        `
+        for (let i = 0; i < processedData.length; i++) {
+            nameRow += `
+            <td><input type="number"></input></td>
+            `
+        }
+        nameRow += `
+        </tr>
+        `
+        namesArray.push(nameRow);
+    }
+
+
+    for (let i = 0; i < processedData.length; i++) {
+        holesRow += `
+        <th>${processedData[i].number}</th>
+        `
+        yardsRow += `
+        <td>${processedData[i].yards}</td>
+        `
+        parRow += `
+        <td>${processedData[i].par}</td>
+        `
+    }
+    scorecardDiv.innerHTML = `
+    ${holesRow}
+    </tr>
+    ${yardsRow}
+    </tr>
+    ${parRow}
+    </tr>
+    ${namesArray.join('')}
+    </tbody>
+    `
+}
 
 function validateOptions() {
     const allForms = document.getElementsByClassName('form-control');
@@ -88,7 +192,7 @@ function validateOptions() {
     };
     const names = document.getElementsByClassName('names');
     for (let i = 0; i < names.length; i++) {
-        if(names[i].value == '') {
+        if (names[i].value == '') {
             names[i].classList.add('is-invalid');
         }
         else {
