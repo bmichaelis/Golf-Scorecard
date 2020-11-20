@@ -137,16 +137,24 @@ async function calculateScore() {
     let player3 = optionsSelected.playerNames[2];
     let player4 = optionsSelected.playerNames[3];
     let playerScores = [];
-    let score1 = 0;
-    if(optionsSelected.numberOfPlayers == 1) {
+    // let score1 = 0;
+    // if(optionsSelected.numberOfPlayers == 1) {
+    //     for(let i = 0; i < processedData.length; i++) {
+    //         score1 += document.getElementById(`${player1}${i}`).value
+    //         console.log(document.getElementById(`${player1}${i}`).value)
+    //         console.log(score1)
+    //     }
+    // }
+    for(let count = 0; count < optionsSelected.playerNames.length; count++) {
+        let score = 0;
         for(let i = 0; i < processedData.length; i++) {
-            score1 += document.getElementById(`${player1}${i}`.value)
-            console.log(document.getElementById(`${player1}${i}`.value))
-            console.log(score1)
+            let aScore = parseInt(document.getElementById(`${optionsSelected.playerNames[count]}${i}`).value)
+            score += isNaN(aScore) ? 0 : aScore
+            console.log(`${optionsSelected.playerNames[count]}${i} value:`, aScore)
         }
+        document.getElementById(`scoreTotal${count}`).innerText = score;
+        console.log(`FinalScore: ${score}`)
     }
-    console.log(score1)
-
 }
 
 window.calculateScore = calculateScore;
@@ -174,9 +182,9 @@ async function populateScoreCard() {
         <tr>
         <th>${optionsSelected.playerNames[i]}</th>
         `
-        for (let i = 0; i < processedData.length; i++) {
+        for (let j = 0; j < processedData.length; j++) {
             nameRow += `
-            <td><input id="${optionsSelected.playerNames}${i}" onkeyup="calculateScore()" type="number"></td>
+            <td><input id="${optionsSelected.playerNames[i]}${j}" onkeyup="calculateScore()"></td>
             `
         }
         nameRow += `
